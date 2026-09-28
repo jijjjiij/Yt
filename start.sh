@@ -1,20 +1,28 @@
 #!/bin/bash
 set -e
 
-echo "🚀 Starting bot..."
+echo "🚀 Starting..."
 
-# Устанавливаем FFmpeg
+# Python packages
+pip install --no-cache-dir -U \
+    aiogram \
+    yt-dlp
+
+# FFmpeg
 apt-get update
 apt-get install -y ffmpeg
 
-# Python зависимости
-pip install --no-cache-dir -U \
-    aiogram \
-    yt-dlp \
-    aiohttp \
-    python-dotenv
+# Запускаем Local Bot API Server
+docker run \
+    --rm \
+    --name telegram-bot-api \
+    -p 8081:8081 \
+    aiogram/telegram-bot-api:latest &
 
-echo "✅ Dependencies installed"
+echo "⏳ Waiting for Local Bot API..."
 
-# Запускаем бота
+sleep 5
+
+echo "🤖 Starting bot..."
+
 python bot.py
